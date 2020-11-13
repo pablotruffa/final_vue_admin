@@ -1,32 +1,48 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <MainNavBar/>
+      <Notification
+      v-if="hasContent"
+      :title="notify.title"
+      :message="notify.message"
+      :bClass="notify.bClass"
+      @close="clearNotification"
+      />
     </div>
     <router-view />
   </div>
 </template>
 
+<script>
+
+  import Notification from '@/components/global/Notification.vue';
+  import MainNavBar from '@/components/global/MainNavBar.vue';
+  
+  export default {
+    name: 'App',
+    components: {Notification,MainNavBar},
+    computed: {
+      hasContent() {
+        let hasContent = this.$store.getters.notification.title != null ? true : false;
+        return hasContent;
+      },
+      notify() {
+        return this.$store.getters.notification;
+      },
+
+    },
+    methods: {
+      clearNotification() {
+        this.$store.commit('SET_NOTIFICATION_NULL');
+      },
+    },
+    watch: {
+      
+    }
+  }
+  
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
